@@ -1,0 +1,26 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{fullpage}
+
+\title{Model Description}
+
+\begin{document}
+\maketitle
+
+\noindent
+The problem is as follows: Divide $n$ workers up into $t$ teams so that each team contains at least one driver, and "worker satisfaction" is maximized (we will define the latter term further down).
+
+The parameters for this problem are, of course, the number of workers, the number of teams (number of workers per team is $\texttt{wpt}=n/t$) and the number of drivers $d\geq t$. In addition to this we suppose that we have a "preference matrix" $P=(p_{ij}) \in \mathbb{Z}^{n\times n}$. Each entry $0\leq p_{ij}\leq n-1$ denotes worker $i$'s preference to work in the same team as worker $j$, where a $1$ means most preferred and $n-1$ means least preferred. Each worker "prefers" himself the most, whence $p_{ii}=0\ \forall i$. Preference is not reciprocal, so $p_{ij}$ and $p_{ji}$ need not be equal. We're assuming that each person values all his coworkers differently, i.e no two elements in any row or column are the same.
+
+Getting an instance of $P$ requires some manual work, as MiniZinc will generate a rather artificial instance from the above constraints.
+
+We can view the workers simply as an array $(1,...,n)$ where we let the first $d$ elements be the drivers. The workers are divided into teams. Such a division is called \texttt{shift} (as in "the division for today's shift") and is simply a permutation of $(1,...,n)$. From among the $d$ drivers we choose $t$ drivers, one for each team, held in \texttt{teamDrivers}. The driver for team $1$ is \texttt{teamDrivers[1]}, the driver for team $2$ is \texttt{teamDrivers[2]}, and so on. A possible symmetry-breaking constraint is to require that \texttt{teamDrivers}, viewed as a sequence, is increasing. For example, if $(n,t,d)=(4,2,2)$ then obviously the shifts $(1,3,2,4)$ and $(2,4,1,3)$ are equivalent, and this possibility can be excluded by using said constraint.
+
+Each team's driver is put in shift position \texttt{wpt*(i-1)}, $i=1,...,t$ and the remaining team members can be thought of as occupying positions $\texttt{wpt*(i-1)+2},...,\texttt{wpt*(i-1)+wpt}$.\newline
+\newline
+\noindent
+At this point we can begin calculating the "worker satisfaction" mentioned above. (to be continued...)
+
+\end{document}
